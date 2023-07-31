@@ -7,16 +7,14 @@ This is a notebook to study soccer modeling of "Wide Open Spaces:..."
 1) Voronoi diagram
 <img src="https://github.com/jmlee8939/jmlee8939.github.io/assets/58785929/bbb1652d-e483-4bf1-b143-ed0f4e779713" width="400" height="200"/>
 
-
 2) Pitch control model
 <img src="https://github.com/jmlee8939/jmlee8939.github.io/assets/58785929/75bcd197-3066-4851-8078-1312e48cc2e9" width="400" height="200"/>
 
-
-
-
 3) Position value model
-4) Space occupying gain
-5) ...
+<img src="https://github.com/jmlee8939/Wide-Open-Space_Pitch_Control_Model/assets/58785929/84826e9f-e96c-494f-8591-7eae48ab5d5b" width = "400" height="200"/>
+
+4) Space occupation gain
+5) Space generation gain
 
 
 ## DATA
