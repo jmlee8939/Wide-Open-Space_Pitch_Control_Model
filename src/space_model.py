@@ -46,7 +46,7 @@ class space_model():
         self.ball_x, self.ball_y = self.df.loc[self.df['Frame'] == frame, ['Ball_x', 'Ball_y']].values[0]
 
         if math.isnan(self.ball_x) :
-            print('no ball data')
+            self.set_frame_flag = False
             return 
         else :
             self.set_frame_flag = True
