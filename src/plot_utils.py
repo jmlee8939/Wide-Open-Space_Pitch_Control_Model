@@ -1,7 +1,9 @@
 import numpy as np
 import pandas as pd
+import math
 from collections import Counter
 import warnings
+from scipy.stats import multivariate_normal
 from pandas.errors import SettingWithCopyWarning
 import matplotlib.pyplot as plt 
 from matplotlib.patches import Ellipse
@@ -10,6 +12,91 @@ import seaborn as sns
 # from plotly.offline import download_plotlyjs, init_notebook_mode, plot, iplot
 # import plotly.graph_objs as go
 warnings.simplefilter(action="ignore", category=SettingWithCopyWarning)
+
+
+class pc_model():
+    def __init__(self, game_no=1, figx=None):
+        self.df = pd.read_json('./Data/sample_match_{}_with_v.json'.format(game_no))
+        self.df1 = self.df.loc[:, [i for i in self.df.columns if 'v' not in i]]
+        self.df2 = self.df.loc[:, [i for i in self.df.columns if 'v' in i]]
+        self.figx = figx
+    
+    def plot_frame(self, frame, figx=None):
+        positions = self.df1[self.df1['Frame'] == frame].iloc[:,3:].drop(['Ball_x', 'Ball_y'], axis=1).dropna(axis=1).iloc[0,:]
+        velocities = np.array(self.df2[self.df1['Frame'] == frame].drop(['Ball_x_v', 'Ball_y_v', 'Ball_v_abs'], axis=1).dropna(axis=1).iloc[0,:])
+        points = np.array([[positions[2*i], positions[2*i+1]] for i in range(len(positions)//2)])
+        velocities = np.array([[velocities[3*i], velocities[3*i+1]] for i in range(len(velocities)//3)])
+        players = np.array([positions.index[2*i].split('_')[0] for i in range(len(points))])
+        ball_x, ball_y = self.df.loc[self.df['Frame'] == frame, ['Ball_x', 'Ball_y']].values[0]
+        ball = np.array([ball_x, ball_y])
+
+        x, y = np.mgrid[0:104:0.1, 0:68:0.1]
+        locations = np.concatenate([x.reshape(-1,1), y.reshape(-1,1)], axis=1)
+
+        s_h, s_a = 0, 0
+        for i, j, k in zip(players, points, velocities):
+            if 'H' in i:
+                if not math.isnan(ball_x):
+                    s_h += self.influence_function(j, locations, k, ball)
+                else :
+                    s_h += self.influence_function2(j, locations)
+            else :
+                if not math.isnan(ball_x):
+                    s_a += self.influence_function(j, locations, k, ball)
+                else :
+                    s_a += self.influence_function2(j, locations)
+
+
+        z = 1 / (1 + np.exp(- s_h + s_a))
+
+        figobj = []
+
+        if figx == None:
+            fig, ax = draw_pitch('white', 'black')
+        else :
+            fig, ax = figx
+        
+        figobj.append(ax.contourf(x, y, z.reshape(1040, 680), alpha=0.8))
+        for t, p, v in zip(players, points, velocities):
+            if 'H' in t:
+                color = 'red'
+            else:
+                color = 'blue'
+            figobj.append(ax.scatter(p[0], p[1], c=color, s=20))
+            figobj.append(ax.arrow(p[0], p[1], v[0], v[1], color='green', head_width = 1))
+
+        if not math.isnan(ball_x):
+            figobj.append(ax.scatter(ball_x, ball_y, color='black'))      
+        return fig, ax, figobj
+
+    def influence_radius(self, ball, position):
+        distance = np.linalg.norm(ball - position)
+        output = np.minimum(3/200*(distance)**2 + 4, 10)
+        return output                        
+
+
+    def influence_function(self, position, locations, velocity, ball):
+        mu = position + 0.5*velocity
+        srat = (velocity[0]**2 + velocity[1]**2)/13**2
+        theta = np.arctan(velocity[1]/(velocity[0]+1e-7))
+        R = np.array([[np.cos(theta), -np.sin(theta)],[np.sin(theta), np.cos(theta)]])
+        R_inv = np.array([[np.cos(theta), np.sin(theta)],[-np.sin(theta), np.cos(theta)]])
+        Ri = self.influence_radius(ball, position)
+        S = np.array([[(1 + srat)*Ri/2, 0],[0, (1-srat)*Ri/2]])
+        Cov = np.matmul(np.matmul(np.matmul(R, S), S), R_inv)
+        new_gaussian = multivariate_normal(mu, Cov)
+        out = new_gaussian.pdf(locations)
+        out /= new_gaussian.pdf(position)
+        return out
+    
+
+    def influence_function2(self, position, location):
+        mv_gaussian = multivariate_normal(position, [[12, 0], [0, 12]])
+        out = mv_gaussian.pdf(location)
+        out /= mv_gaussian.pdf(position)
+        return out
+
+
 
 
 def pitch():
