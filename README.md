@@ -14,7 +14,10 @@ This is a notebook to study soccer modeling of "Wide Open Spaces:..."
 <img src="https://github.com/jmlee8939/Wide-Open-Space_Pitch_Control_Model/assets/58785929/84826e9f-e96c-494f-8591-7eae48ab5d5b" width = "400" height="200"/>
 
 4) Space occupation gain
+<img src="https://github.com/jmlee8939/Wide-Open-Space_Pitch_Control_Model/assets/58785929/c22ea91e-3225-45ff-803e-fe692a6ebb52" width = "400" height="200"/>
+
 5) Space generation gain
+<img src="https://github.com/jmlee8939/Wide-Open-Space_Pitch_Control_Model/assets/58785929/ceaaf647-8d14-4e85-a2fd-465b94016e56" width = "400" height="200"/>
 
 
 ## DATA
@@ -23,3 +26,4 @@ This is a notebook to study soccer modeling of "Wide Open Spaces:..."
 ## Reference
 - [Wide Open Spaces: A statistical technique for measuring space creation in professional soccer](https://static.capabiliaserver.com/frontend/clients/barca/wp_prod/wp-content/uploads/2018/05/Wide-Open-Spaces.pdf)
 
+- [SSAC18: Wide Open Spaces: A Statistical Technique for Measuring Space Creation in Pro Soccer](https://www.youtube.com/watch?v=wSJYeZG_c_o)
