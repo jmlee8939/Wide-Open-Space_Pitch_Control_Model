@@ -64,6 +64,7 @@ class pc_model():
                 color = 'blue'
             figobj.append(ax.scatter(p[0], p[1], c=color, s=20))
             figobj.append(ax.arrow(p[0], p[1], v[0], v[1], color='green', head_width = 1))
+            figobj.append(ax.text(p[0], p[1], t))
 
         if not math.isnan(ball_x):
             figobj.append(ax.scatter(ball_x, ball_y, color='black'))      
