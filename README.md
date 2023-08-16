@@ -1,6 +1,6 @@
 # Wide-Open-Space_Pitch_Control_Model
  - Implementing models of the paper
- - "Wide Open Spaces: A statistical technique for measuring space creation in professional soccer"  by Jaeminiman
+ - "Wide Open Spaces: A statistical technique for measuring space creation in professional soccer"  by Javier Fernandes
  
 ## Notebook
 This is a notebook to study soccer modeling of "Wide Open Spaces:..."
